@@ -103,8 +103,8 @@ analyze.rivernet <- function(net,verbose=TRUE,...)
         if ( sum(is.na(c(z.start[ind.start],z.end[ind.end]))) > 0 )
         {
           cat("*** Unable to dermine outlet")
-          if ( n.subnet > 1 ) cat("for subnet",s)
-          cat("(provide elevation information or use downstream coordinate order) ***\n")
+          if ( n.subnet > 1 ) cat(" for subnet",s)
+          cat(" (provide elevation information or use downstream coordinate order) ***\n")
           outlet[ind] <- NA
         }
         else
@@ -200,7 +200,33 @@ analyze.rivernet <- function(net,verbose=TRUE,...)
     return(net)
   }
   net$attrib.reach <- cbind(net$attrib.reach,downstream=downstream,reach_down=reach.down)  
-    
+  
+  # establish linking:
+  # ------------------
+  
+  for ( i in 1:n.node ) 
+  { 
+    net$nodes[[i]]$from_reach <- numeric(0)
+    net$nodes[[i]]$to_reach   <- numeric(0)
+  }
+  for ( i in 1:n.reach )
+  {
+    if ( downstream[i] )
+    {
+      net$reaches[[i]]$from_node <- node.start[i]
+      net$reaches[[i]]$to_node   <- node.end[i]
+      net$nodes[[node.start[i]]]$to_reach <- c(net$nodes[[node.start[i]]]$to_reach,i)
+      net$nodes[[node.end[i]]]$from_reach <- c(net$nodes[[node.end[i]]]$from_reach,i)
+    }
+    else
+    {
+      net$reaches[[i]]$from_node <- node.end[i]
+      net$reaches[[i]]$to_node   <- node.start[i]
+      net$nodes[[node.end[i]]]$to_reach     <- c(net$nodes[[node.end[i]]]$to_reach,i)
+      net$nodes[[node.start[i]]]$from_reach <- c(net$nodes[[node.start[i]]]$from_reach,i)
+    }
+  }
+      
   # find paths from headwater to outlet:
   # ------------------------------------
     

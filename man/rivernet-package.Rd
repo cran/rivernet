@@ -13,8 +13,8 @@ Read, Analyse and Plot River Networks
 \tabular{ll}{
 Package: \tab rivernet\cr
 Type: \tab Package\cr
-Version: \tab 1.0\cr
-Date: \tab 2014-10-16\cr
+Version: \tab 1.1\cr
+Date: \tab 2017-05-11\cr
 License: \tab GPL (>= 2)\cr
 }
 }
@@ -28,9 +28,12 @@ structure and network paths and regions consisting of sections and nodes that fu
 prescribed criteria, and to plot the river network and associated properties.\cr\cr
 Important functions:\cr\cr
 \code{\link{rivernet.read}}: Read river network and attribute data from text files.\cr
+\code{\link{rivernet.write}}: Write river network and attribute data to text files.\cr
 \code{\link{plot.rivernet}}: Plot a river network and visualize properties.\cr
 \code{\link{analyze.rivernet}}: Analyse the network structure and calculate network properties.\cr
-\code{\link{getreachind.rivernet}}: Find a reach that is closest to a given point.\cr
+\code{\link{prune.rivernet}}: Prune a river network at given points.\cr
+\code{\link{getreachind.rivernet}}: Find the reach that is closest to a given point.\cr
+\code{\link{getnodeind.rivernet}}: Find the node that is closest to a given point.\cr
 \code{\link{mean.rivernet}}: Calculate the length and stream order weighted mean of a property.\cr
 \code{\link{upstreamconnectivity.rivernet}}: Find flow paths that fulfill given properties, e.g. that can be reached by fish from downstream.\cr
 \code{\link{adjacentreaches.rivernet}}: Find regions of river sections that fulfill given properties and are (nearly) adjacent to each other.

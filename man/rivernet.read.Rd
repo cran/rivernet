@@ -30,12 +30,16 @@ rivernet.read(file.reachcoord,
   \item{file.reachcoord}{
 Name of text file or vector of names that contain(s) columns with reach id, x, y, and z coordinates.
 An arbitrary number of rows per reach is possible to allow for a reasonable geographical resolution of the river reach, but the rows corresponding to the same reach id are interpreted as a sequential series of points between which the river is constructed by linear interpolation.
+If multiple file names are provided, the data frames read from different files
+are combined with \code{\link{rbind}}.
 }
   \item{file.reachattrib}{
 Name of text file or vector of names that contain(s) a column with the same reach reach ids as used in the file \code{file.reachcorrd} and an arbitrary number of attributes of the reaches.
+If multiple file names are provided, the data frames read from different files are combined by \code{\link{merge}} so that either additional attributes of existing reaches (same reach identifier) or attributes for additional reaches (new reach identifiers) can be provided.
 }
   \item{file.nodeattrib}{
 Name of text file or vector of names that contain(s) columns with x and y coordinates of the node (must be identical with start or end coordinats of the connecting reaches) and an arbitrary number of attributes of the nodes.
+If multiple file names are provided, the data frames read from different files are combined by \code{\link{merge}} so that either additional attributes of existing nodes (same values for x and y coordinates) or attributes for additional nodes (new x and y coordinates) can be provided.
 }
   \item{colnames}{
 Labelled vector containing strings to identify the headers of the colums for reach and node identifiers and x, y and z coordinates along the river reaches.
@@ -60,12 +64,15 @@ Optional further arguments are passed to read.table.
 \value{
 The function returns an object of type "rivernet" that contains the geographical representation of the river.
 This object contains the following elements\cr\cr
-\code{reaches}: List of river reaches with the following elements: \cr
+\code{reaches}: list of river reaches with the following elements: \cr
 \code{n}: number of coordinates,\cr
 \code{x}: vector of x-coordinates,\cr
 \code{y}: vector of y-coordinates,\cr
 \code{z}: vector of z-coordinates,\cr
 \code{length}: length of the reach),\cr\cr
+\code{nodes}: list of river nodes with the following elements: \cr
+\code{x}: x-coordinate,\cr
+\code{y}: y-coordinate,\cr\cr
 \code{xlim}: range of river network in x direction.\cr\cr
 \code{ylim}: range of river network in y direction.\cr\cr
 \code{zlim}: vertical range of river network (z direction).\cr\cr
@@ -83,7 +90,13 @@ This object contains the following elements\cr\cr
 \code{node_start}: index of node at the start of the reach,\cr
 \code{node_end}: index of node at the end of the reach,\cr
 \code{length}: length of reach.\cr
-If the argument \code{analyze} is true, this data frame contains the additional columns:
+If a file \code{file.reachattrib} was provided, its columns are added to the colums of this data frame.\cr\cr
+\code{attrib.node}: data frame of nodes with columns \cr
+\code{node}: node index,\cr
+\code{x}: x-coordinate of the node,\cr
+\code{y}: y-coordinate of the node.\cr\cr
+If a file \code{file.nodeattrib} was provided, its columns are added to the colums of this data frame.\cr\cr
+If the argument \code{analyze} is true, the data frame \code{attrib.reach} contains the additional columns:
 \code{subnet}: index of sub-network,\cr
 \code{n_start}: number of reaches connected at the start end of the reach,\cr
 \code{n_end}: number of reaches connected at the end end of the reach,\cr
@@ -93,18 +106,18 @@ If the argument \code{analyze} is true, this data frame contains the additional 
 \code{downstream}: logical variable indicating if the reach coordinates represent the downstream direction,\cr
 \code{reach_down}: index of reach downstream of the reach,\cr
 \code{streamorder}: stream order of the reach.\cr
-If a file \code{file.reachattrib} was provided, its columns are added to the colums of this data frame.\cr\cr
-\code{attrib.node}: data frame of nodes with columns \cr
-\code{node}: node index,\cr
-\code{x}: x-coordinate of the node,\cr
-\code{y}: y-coordinate of the node.\cr\cr
-\code{paths}: list of vectors of reach indices of the paths from all headwaters to the outlet.
+\code{paths}: list of vectors of reach indices of the paths from all headwaters to the outlet.\cr
+In addition, the list of reaches (\code{reaches}) and the list of nodes (\code{nodes}) are appended by indices
+\code{from_node}, \code{to_node} and \code{from_reach}, \code{to_reach}, respectively.
 }
 
 \seealso{
 \code{\link{analyze.rivernet}}\cr
 \code{\link{plot.rivernet}}\cr
+\code{\link{rivernet.write}}\cr
+\code{\link{prune.rivernet}}\cr
 \code{\link{getreachind.rivernet}}\cr
+\code{\link{getnodeind.rivernet}}\cr
 \code{\link{mean.rivernet}}\cr
 \code{\link{upstreamconnectivity.rivernet}}\cr
 \code{\link{adjacentreaches.rivernet}}.

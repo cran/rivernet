@@ -59,5 +59,5 @@ getreachind.rivernet <- function(net,x,y,...)
       }
     }
   }
-  return(data.frame(reach.ind=ind,reach.dist=dist))
+  return(data.frame(reach.ind=ind,dist=dist))
 }

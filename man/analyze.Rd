@@ -27,10 +27,21 @@ Optional further arguments.
 }
 
 \value{
-List with the following entries:\cr
-\code{paths.reachable}: List of numeric vectors specifying the indices of the reaches of a reachable path. Note that this is a subset of the reaches given in the same component of the element \code{pahts} of the river network.\cr
-\code{firstorder.reachable}: Vector of logicals indicating if the corresponding paths given above reach first order rivers.
-\code{fract.firstorder.reachable}: fraction of first order segments that can be reached (under the conditions specified by \code{crit.reach}, \code{crit.node} and \code{thresh.length}).
+The function returns an object of type \code{rivernet} that adds the following columns to the
+data frame \code{attrib.reach} of the object:
+\code{subnet}: index of sub-network,\cr
+\code{n_start}: number of reaches connected at the start end of the reach,\cr
+\code{n_end}: number of reaches connected at the end end of the reach,\cr
+\code{endreach}: logical variable indicating if the reach is only connected at one end,\cr
+\code{outlet}: logical variable indicating if the reach represents the outlet of the network,\cr
+\code{headwater}: logical variable indicating if the reach is a headwater,\cr
+\code{downstream}: logical variable indicating if the reach coordinates represent the downstream direction,\cr
+\code{reach_down}: index of reach downstream of the reach,\cr
+\code{streamorder}: stream order of the reach.\cr\cr
+In addition, the list of reaches (\code{reaches}) and the list of nodes (\code{nodes}) are appended by indices
+\code{from_node}, \code{to_node} and \code{from_reach}, \code{to_reach}, respectively.
+Finally, a list of all paths from the headwaters to the outlet is provided;\cr
+\code{paths}: list of vectors of reach indices of the paths from all sources to the outlet.
 }
 
 \seealso{

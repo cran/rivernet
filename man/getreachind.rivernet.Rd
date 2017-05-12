@@ -34,7 +34,7 @@ A data frame with the indices in the first and the distances in the second colum
 }
 
 \seealso{
-\code{\link{rivernet.read}}, \code{\link{upstreamconnectivity.rivernet}}, \code{\link{adjacentreaches.rivernet}},\cr
+\code{\link{rivernet.read}}, \code{\link{getnodeind.rivernet}}, \code{\link{upstreamconnectivity.rivernet}}, \code{\link{adjacentreaches.rivernet}},\cr
 \code{\link[utility:utility-package]{utility}}.
 }
 

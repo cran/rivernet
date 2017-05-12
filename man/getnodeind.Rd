@@ -1,17 +1,17 @@
-\name{getreachind}
+\name{getnodeind}
 
-\alias{getreachind}
+\alias{getnodeind}
 
 \title{
-Gets indices of reaches that are closest to given locations
+Gets indices of nodes that are closest to given locations
 }
 
 \description{
-Gets indices of reaches that are closest to given locations
+Gets indices of nodes that are closest to given locations
 }
 
 \usage{
-getreachind(net,x,y,...)
+getnodeind(net,x,y,...)
 }
 
 \arguments{
@@ -34,6 +34,6 @@ A data frame with the indices in the first and the distances in the second colum
 }
 
 \seealso{
-\code{\link{rivernet.read}}, \code{\link{getnodeind.rivernet}}, \code{\link{upstreamconnectivity.rivernet}}, \code{\link{adjacentreaches.rivernet}},\cr
+\code{\link{rivernet.read}}, \code{\link{getreachind.rivernet}}, \code{\link{upstreamconnectivity.rivernet}}, \code{\link{adjacentreaches.rivernet}},\cr
 \code{\link[utility:utility-package]{utility}}.
 }

@@ -1,0 +1,34 @@
+==================================
+Change history of rivernet package
+==================================
+
+
+Changes version 1.0 (16.10.2014) -> version 1.1 (xx.xx.2017)
+============================================================
+
+PR: Merging of reach and node attributes in case of multiple files:
+    "rbind" replaced by "merge".
+    A description of the types of merging was added to the help file.
+
+PR: Description of value of "analyze" corrected. 
+
+PR: New member function "getnodeind"
+
+PR: Error analysis improved in rivernet.read
+
+PR: Sorting of reaches according to identifiers removed
+
+PR: New member functions "rivernet.write" and "prune"
+
+PR: Addition of additional criterion "crit.node" to function
+    "adjacentreaches"
+
+PR: Additional output for very large river networks (> 10000 reaches)
+    and modified order of file reading and analysis (to get read 
+    errors earlier)
+
+PR: Option to write only selected sub-networks in rivernet.write added.
+
+PR: Error message for non-availability of altitude information removed.
+
+

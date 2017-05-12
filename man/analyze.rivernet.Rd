@@ -11,9 +11,7 @@ Analyzes the network structure of a river network stored as an object of type \c
 }
 
 \usage{
-\method{analyze}{rivernet}(net,
-                           verbose          = TRUE,
-                           ...)
+\method{analyze}{rivernet}(net,verbose=TRUE,...)
 }
 
 \arguments{
@@ -40,12 +38,15 @@ data frame \code{attrib.reach} of the object:
 \code{downstream}: logical variable indicating if the reach coordinates represent the downstream direction,\cr
 \code{reach_down}: index of reach downstream of the reach,\cr
 \code{streamorder}: stream order of the reach.\cr\cr
-In addition, a list of all paths from the headwaters to the outlet is provided;\cr
+In addition, the list of reaches (\code{reaches}) and the list of nodes (\code{nodes}) are appended by indices
+\code{from_node}, \code{to_node} and \code{from_reach}, \code{to_reach}, respectively.
+Finally, a list of all paths from the headwaters to the outlet is provided;\cr
 \code{paths}: list of vectors of reach indices of the paths from all sources to the outlet.
 }
 
 \seealso{
-\code{\link{rivernet.read}},\cr
+\code{\link{rivernet.read}}, \code{\link{rivernet.write}},\cr
+\code{\link{prune.rivernet}},\cr
 \code{\link{mean.rivernet}}, \code{\link{upstreamconnectivity.rivernet}}, \code{\link{adjacentreaches.rivernet}},\cr 
 \code{\link[utility:utility-package]{utility}}.
 }
