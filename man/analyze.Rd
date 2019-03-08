@@ -11,18 +11,23 @@ Analyzes the network structure of a river network stored as an object of type \c
 }
 
 \usage{
-analyze(net,verbose=TRUE,...)
+analyze(net,outlet.reach=NA,calc.streamorder=TRUE,verbose=TRUE)
 }
 
 \arguments{
   \item{net}{
 Object of class "rivernet" e.g. read by the function \code{\link{rivernet.read}}.
 }
+  \item{outlet.reach}{
+Index or, in case of multiple subnets index vector, of outlet reach or outlet reaches.
+If not provided, the function identifies the outlet reach either by assuming coordinates are provided in downstream direction or from elevation information.
+}
+  \item{calc.streamorder}{
+Logical variable to indicate whether streamorder should be calculated
+(after pruning top reaches (see \code{\link{prune.rivernet}}) it may be unwanted to calculate stream order by setting (new) top reaches to order one).
+}
   \item{verbose}{
 Logical variable to turn on and off summary output about the network structure read.
-}
-  \item{...}{
-Optional further arguments.
 }
 }
 

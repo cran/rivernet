@@ -1,45 +1,66 @@
-prune <- function(net,x.up=NA,y.up=NA,x.dn=NA,y.dn=NA,verbose=TRUE) UseMethod("prune")
+prune <- function(net,reach.up=numeric(0),reach.dn=numeric(0),verbose=TRUE) UseMethod("prune")
 
-prune.rivernet <- function(net,x.up=NA,y.up=NA,x.dn=NA,y.dn=NA,verbose=TRUE)
+prune.rivernet <- function(net,reach.up=numeric(0),reach.dn=numeric(0),verbose=TRUE)
 {
-  # get reaches to prune from:
-
-  reachind.up <- NA; if ( !is.na(x.up[1]) ) reachind.up <- getreachind(net,x.up,y.up)[,1]
-  reachind.dn <- NA; if ( !is.na(x.dn[1]) ) reachind.dn <- getreachind(net,x.dn,y.dn)[,1]
+  # check input:
   
-  if ( is.na(reachind.up[1]) & is.na(reachind.dn[1]) )
+  n.reach <- length(net$reaches)
+  if ( length(reach.dn) > 0 )
   {
-    if ( verbose ) cat("*** no points found to prune at\n")
+    ind.illegal <- which(reach.dn < 1 | reach.dn > n.reach)
+    if ( length(ind.illegal) > 0 )
+    {
+      cat("*** reach(es)",paste(reach.dn[ind.illegal],collapse=","),"to prune at do(es) not exist\n")
+      reach.dn <- reach.dn[-ind.illegal]
+    }
+  }
+  if ( length(reach.up) > 0 )
+  {
+    ind.illegal <- which(reach.up < 1 | reach.up > n.reach)
+    if ( length(ind.illegal) > 0 )
+    {
+      cat("*** reach(es)",paste(reach.up[ind.illegal],collapse=","),"to prune at do(es) not exist\n")
+      reach.up <- reach.up[-ind.illegal]
+    }
+  }
+  if ( length(reach.dn)==0 & length(reach.up)==0 )
+  {
+    cat("*** no reaches found to prune from\n")
     return(net)
   }
   
   # get network structure:
   
-  if ( length(net$paths) == 0 ) net <- analyze(net,verbose)
-  
+  if ( length(net$paths) == 0 ) net <- analyze(net,verbose=verbose)        # analyze network structure
+  if ( length(reach.dn) > 0 )   net$attrib.reach$outlet[reach.dn] <- TRUE  # define new outlets
+
   # pruning network:
 
   remove.reach.up <- rep(FALSE,length(net$reaches))
   remove.reach.dn <- rep(FALSE,length(net$reaches))
-  if ( !is.na(reachind.dn[1]) ) remove.reach.dn <- rep(TRUE,length(net$reaches))
+  if ( length(reach.dn) > 0 ) 
+  {
+    subnets <- unique(net$attrib.reach$subnet[reach.dn])
+    remove.reach.dn[net$attrib.reach$subnet %in% subnets] <- TRUE
+  }
   for ( i in 1:length(net$paths) )
   {
-    if ( !is.na(reachind.up[1]) )
+    if ( length(reach.up) > 0 )
     {
-      inds <- match(reachind.up,net$paths[[i]])
+      inds <- match(reach.up,net$paths[[i]])
       if ( sum(!is.na(inds)) > 0 )
       {
         ind <- max(inds,na.rm=TRUE)
-        remove.reach.up[net$paths[[i]][1:ind]] <- TRUE
+        if ( ind > 1 ) remove.reach.up[net$paths[[i]][1:(ind-1)]] <- TRUE  # keep prune reach
       }
     }
-    if ( !is.na(reachind.dn[1]) )
+    if ( length(reach.dn) > 0 )
     {
-      inds <- match(reachind.dn,net$paths[[i]])
+      inds <- match(reach.dn,net$paths[[i]])
       if ( sum(!is.na(inds)) > 0 )
       {
         ind <- max(inds,na.rm=TRUE)
-        if ( ind > 1 ) remove.reach.dn[net$paths[[i]][1:(ind-1)]] <- FALSE
+        remove.reach.dn[net$paths[[i]][1:ind]] <- FALSE  # keep prune reach
       }
     }
   }
@@ -53,9 +74,16 @@ prune.rivernet <- function(net,x.up=NA,y.up=NA,x.dn=NA,y.dn=NA,verbose=TRUE)
     if ( remove.reach.dn[i] )
     {
       remove.node[net$reaches[[i]]$to_node] <- TRUE
-      if ( is.na(match(i,reachind.dn)) )  # remove upstream nodes in side branches
+      if ( is.na(match(i,reach.dn)) )  # remove upstream nodes in side branches
       {
         remove.node[net$reaches[[i]]$from_node] <- TRUE
+        if ( length(reach.dn) > 0 )   # keep downstream node of reach to keep
+        {
+          for ( r in reach.dn )
+          {
+            remove.node[net$reaches[[r]]$to_node] <- FALSE
+          }
+        }
       }
     }
   }
@@ -100,7 +128,7 @@ prune.rivernet <- function(net,x.up=NA,y.up=NA,x.dn=NA,y.dn=NA,verbose=TRUE)
   
   # reanalyzing network structure:
   
-  net <- analyze(net,verbose=verbose)
+  net <- analyze(net,outlet.reach=which(net$attrib.reach$outlet),calc.streamorder=FALSE,verbose=verbose)
   
   return(net)
 }

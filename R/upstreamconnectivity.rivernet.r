@@ -3,6 +3,29 @@ upstreamconnectivity <- function(x, ...) UseMethod("upstreamconnectivity")
 
 upstreamconnectivity.rivernet <- function(x,crit.reach,crit.node,thresh.length=0,...)
 {
+  streamorder.reachable <- function(paths,streamorder)
+  {
+    num.paths <- length(paths)
+    max.streamorder <- max(streamorder)
+    num.streamorder.reachable <- rep(NA,max.streamorder)
+    for ( o in 1:max.streamorder )
+    {
+      if ( num.paths > 0 )
+      {
+        first.o <- rep(NA,num.paths)
+        for ( i in 1:num.paths )
+        {
+          ind <- match(o,streamorder[rev(paths[[i]])])
+          if ( !is.na(ind) ) first.o[i] <- rev(paths[[i]])[ind]
+        }
+        first.o <- unique(first.o)
+        if ( anyNA(first.o) ) first.o <- first.o[!is.na(first.o)]
+        num.streamorder.reachable[o] <- length(first.o)
+      }
+    }
+    return(num.streamorder.reachable)
+  }
+
   rivernet <- x
   if ( length(rivernet$paths) == 0 )
   {
@@ -21,7 +44,8 @@ upstreamconnectivity.rivernet <- function(x,crit.reach,crit.node,thresh.length=0
       reach <- path[j]
       if ( crit.reach[reach] ) 
       {
-        path.reachable <- c(reach,path.reachable)
+        #path.reachable <- c(reach,path.reachable)
+        path.reachable <- path[j:length(path)]
         dist.bad <- 0
         if ( rivernet$attrib.reach$streamorder[reach]==1 ) firstorder.reachable[i] <- TRUE
         if ( rivernet$attrib.reach$downstream[reach] )
@@ -44,5 +68,6 @@ upstreamconnectivity.rivernet <- function(x,crit.reach,crit.node,thresh.length=0
   }
   return(list(paths.reachable      = paths.reachable,
               firstorder.reachable = firstorder.reachable,
-              fract.firstorder.reachable = sum(firstorder.reachable)/length(paths.reachable)))
+              fract.firstorder.reachable = sum(firstorder.reachable)/length(paths.reachable),
+              streamorder.reachable = streamorder.reachable(paths.reachable,rivernet$attrib.reach$streamorder)))
 }

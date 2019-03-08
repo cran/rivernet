@@ -1,6 +1,6 @@
-analyze <- function(net,verbose=TRUE, ...) UseMethod("analyze")
+analyze <- function(net,outlet.reach=NA,calc.streamorder=TRUE,verbose=TRUE) UseMethod("analyze")
 
-analyze.rivernet <- function(net,verbose=TRUE,...)
+analyze.rivernet <- function(net,outlet.reach=NA,calc.streamorder=TRUE,verbose=TRUE)
 {
   # definitions:
   # ------------
@@ -34,7 +34,7 @@ analyze.rivernet <- function(net,verbose=TRUE,...)
       }
     }
   }
-  net$attrib.reach <- cbind(net$attrib.reach,subnet=subnet)
+  net$attrib.reach$subnet <- subnet
   if ( verbose )
   {
     cat("Number of sub-nets:                 ",n.subnet,"\n")
@@ -52,7 +52,9 @@ analyze.rivernet <- function(net,verbose=TRUE,...)
     n.end[i]   <- sum(nodes==net$attrib.reach$node_end[i])   - 1
   }
   endreach <- n.start==0 | n.end==0
-  net$attrib.reach <- cbind(net$attrib.reach,n_start=n.start,n_end=n.end,endreach=endreach)
+  net$attrib.reach$n_start  <- n.start
+  net$attrib.reach$n_end    <- n.end
+  net$attrib.reach$endreach <- endreach
   if ( verbose )
   {
     cat("Number of end reaches:              ",sum(endreach),"\n")
@@ -66,64 +68,89 @@ analyze.rivernet <- function(net,verbose=TRUE,...)
   for ( s in 1:n.subnet )
   {
     i.out <- 0
-    ind <- subnet == s & endreach  # outlet candidates within subnet
-    if ( sum(ind) == 0 )
+    i.endreach <- which(subnet == s & endreach)  # outlet candidates within subnet
+    if ( length(i.endreach) == 0 )
     {
       cat("No potential outlet found")
       if ( n.subnet > 1 ) cat(" for subnet",subnet)
       cat("(circular connections?)\n")
-      outlet[ind] <- NA
     }
     else
     {
-      if ( length(n.end[ind]==0) == 1 )  # unique reach with no end connection is assumed to be outlet 
-      {                                  # (river coordinates downstream)
-        i.out <- which(ind & n.end==0)
-        outlet[i.out] <- TRUE
-      }
-      else
+      ind <- which(outlet.reach %in% i.endreach)
+      if ( length(ind) != 0 )
       {
-        if ( length(n.start[ind]==0) == 1 ) # unique reach with no start connection is assumed to be outlet 
-        {                                   # only if no elevation information is present
-          i.out <- which(ind & n.start==0)
-          if ( is.na(z.start[i.out]) )
-          {
-            outlet[i.out] <- TRUE
-          }
-          else
-          {
-            i.out <- 0
-          }
-        }
-      }
-      if ( i.out == 0 ) # if not uniquely identified, choose end with lowest elevation
-      {                 # (this obviously requires elevation information)
-        ind.start <- which(ind & n.start==0)
-        ind.end   <- which(ind & n.end==0)
-        if ( sum(is.na(c(z.start[ind.start],z.end[ind.end]))) > 0 )
+        if ( length(ind) > 1 )
         {
-          cat("*** Unable to dermine outlet")
-          if ( n.subnet > 1 ) cat(" for subnet",s)
-          cat(" (provide elevation information or use downstream coordinate order) ***\n")
+          cat("Multiple outlets specified")
+          if ( n.subnet > 1 ) cat(" for subnet",subnet)
+          cat("\n")
           outlet[ind] <- NA
         }
         else
         {
-          if ( min(z.end[ind.end]) < min(z.start[ind.start]) )
+          i.out <- outlet.reach[ind]
+          outlet[i.out] <- TRUE
+        }
+      }
+      else  # search for potential outlet
+      {
+        if ( any(!is.na(outlet.reach)) )
+        {
+          cat("Prescribed outlet not identified as an end reach")
+          if ( n.subnet > 1 ) cat(" in subnet ",subnet)
+          cat("; trying to identify other outlet\n")
+        }
+        if ( length(n.end[i.endreach]==0) == 1 )  # unique reach with no end connection is assumed to be outlet 
+        {                                         # (river coordinates downstream)
+          i.out <- which(n.end[i.endreach]==0)
+          outlet[i.out] <- TRUE
+        }
+        else
+        {
+          if ( length(n.start[i.endreach]==0) == 1 ) # unique reach with no start connection is assumed to be outlet 
+          {                                          # only if no elevation information is present
+            i.out <- which(n.start[i.endreach]==0)
+            if ( is.na(z.start[i.out]) )
+            {
+              outlet[i.out] <- TRUE
+            }
+            else
+            {
+              i.out <- 0
+            }
+          }
+        }
+        if ( i.out == 0 ) # if not uniquely identified, choose end with lowest elevation
+        {                 # (this obviously requires elevation information)
+          ind.start <- i.endreach[n.start[i.endreach]==0]
+          ind.end   <- i.endreach[n.end[i.endreach]==0]
+          if ( sum(is.na(c(z.start[ind.start],z.end[ind.end]))) > 0 )
           {
-            outlet[ind.end[which.min(z.end[ind.end])]] <- TRUE
+            cat("*** Unable to dermine outlet")
+            if ( n.subnet > 1 ) cat(" for subnet",s)
+            cat(" (provide elevation information or use downstream coordinate order) ***\n")
+            outlet[i.endreach] <- NA
           }
           else
           {
-            outlet[ind.start[which.min(z.start[ind.start])]] <- TRUE
+            if ( min(z.end[ind.end]) < min(z.start[ind.start]) )
+            {
+              outlet[ind.end[which.min(z.end[ind.end])]] <- TRUE
+            }
+            else
+            {
+              outlet[ind.start[which.min(z.start[ind.start])]] <- TRUE
+            }
           }
         }
       }
     }
   }
   headwater <- endreach & !outlet
-  net$attrib.reach <- cbind(net$attrib.reach,outlet=outlet,headwater=headwater)
-
+  net$attrib.reach$outlet    <- outlet
+  net$attrib.reach$headwater <- headwater
+  
   if ( sum(is.na(outlet)) > 0 | n.node != n.reach + n.subnet )
   {
     cat("*** Unable to complete network analysis (circular connections?) ***\n")
@@ -199,7 +226,8 @@ analyze.rivernet <- function(net,verbose=TRUE,...)
     cat("*** Unable to complete network analysis (circular connections?) ***\n")
     return(net)
   }
-  net$attrib.reach <- cbind(net$attrib.reach,downstream=downstream,reach_down=reach.down)  
+  net$attrib.reach$downstream <- downstream  
+  net$attrib.reach$reach_down <- reach.down
   
   # establish linking:
   # ------------------
@@ -255,59 +283,62 @@ analyze.rivernet <- function(net,verbose=TRUE,...)
   # determine stream order:
   # -----------------------
   
-  streamorder <- rep(NA,n.reach)
-  ind <- which(headwater)
-  streamorder[ind] <- 1            # orders = 1 at headwaters
-  for ( i in 1:length(ind) )
+  if ( calc.streamorder )
   {
-    for ( j in 1:n.reach ) # loop for moving downstream; will be terminated earlier
+    streamorder <- rep(NA,n.reach)
+    ind <- which(headwater)
+    streamorder[ind] <- 1            # orders = 1 at headwaters
+    for ( i in 1:length(ind) )
     {
-      if( is.na(reach.down[ind[i]]) )
+      for ( j in 1:n.reach ) # loop for moving downstream; will be terminated earlier
       {
-        break
-      }
-      else
-      {
-        cur.order <- streamorder[ind[i]]        
-        if ( downstream[ind[i]] )
+        if( is.na(reach.down[ind[i]]) )
         {
-          downstream.node <- node.end[ind[i]]
+          break
         }
         else
         {
-          downstream.node <- node.start[ind[i]]
-        }        
-        downstream.or.joining <- c(which(node.start==downstream.node),which(node.end==downstream.node))
-        downstream.or.joining <- downstream.or.joining[-match(ind[i],downstream.or.joining)]
-        if ( length(downstream.or.joining) == 1 ) # no junction, proceed with same order
-        {
-          ind[i] <- reach.down[ind[i]]
-          streamorder[ind[i]] <- cur.order
-        }
-        else # junction, increase order if other order is the same or larger
-        {
-          max.order <- 0
-          for ( k in 1:length(downstream.or.joining) )
+          cur.order <- streamorder[ind[i]]        
+          if ( downstream[ind[i]] )
           {
-            if ( downstream.or.joining[k] != reach.down[ind[i]] )
-            {
-              k.order <- streamorder[downstream.or.joining[k]]
-              max.order <- max(max.order,k.order)
-            }
+            downstream.node <- node.end[ind[i]]
           }
-          if ( is.na(max.order) ) break
-          ind[i] <- reach.down[ind[i]]
-          if ( cur.order == max.order ) cur.order <- cur.order + 1
-          else                          cur.order <- max(cur.order,max.order)
-          streamorder[ind[i]] <- cur.order
+          else
+          {
+            downstream.node <- node.start[ind[i]]
+          }        
+          downstream.or.joining <- c(which(node.start==downstream.node),which(node.end==downstream.node))
+          downstream.or.joining <- downstream.or.joining[-match(ind[i],downstream.or.joining)]
+          if ( length(downstream.or.joining) == 1 ) # no junction, proceed with same order
+          {
+            ind[i] <- reach.down[ind[i]]
+            streamorder[ind[i]] <- cur.order
+          }
+          else # junction, increase order if other order is the same or larger
+          {
+            max.order <- 0
+            for ( k in 1:length(downstream.or.joining) )
+            {
+              if ( downstream.or.joining[k] != reach.down[ind[i]] )
+              {
+                k.order <- streamorder[downstream.or.joining[k]]
+                max.order <- max(max.order,k.order)
+              }
+            }
+            if ( is.na(max.order) ) break
+            ind[i] <- reach.down[ind[i]]
+            if ( cur.order == max.order ) cur.order <- cur.order + 1
+            else                          cur.order <- max(cur.order,max.order)
+            streamorder[ind[i]] <- cur.order
+          }
         }
       }
     }
-  }
-  net$attrib.reach <- cbind(net$attrib.reach,streamorder=streamorder)  
-  if ( verbose )
-  {
-    cat("Maximum stream order:               ",max(streamorder),"\n")
+    net$attrib.reach$streamorder <- streamorder  
+    if ( verbose )
+    {
+      cat("Maximum stream order:               ",max(streamorder),"\n")
+    }
   }
   
   return(net)

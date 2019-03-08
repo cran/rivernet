@@ -13,9 +13,9 @@ Read, Analyse and Plot River Networks
 \tabular{ll}{
 Package: \tab rivernet\cr
 Type: \tab Package\cr
-Version: \tab 1.1\cr
-Date: \tab 2017-05-11\cr
-License: \tab GPL (>= 2)\cr
+Version: \tab 1.2\cr
+Date: \tab 2019-03-03\cr
+License: \tab GPL-3\cr
 }
 }
 
@@ -37,6 +37,7 @@ Important functions:\cr\cr
 \code{\link{mean.rivernet}}: Calculate the length and stream order weighted mean of a property.\cr
 \code{\link{upstreamconnectivity.rivernet}}: Find flow paths that fulfill given properties, e.g. that can be reached by fish from downstream.\cr
 \code{\link{adjacentreaches.rivernet}}: Find regions of river sections that fulfill given properties and are (nearly) adjacent to each other.
+\code{\link{getregionconnections}}: Find connecting paths between regions that may have been identified with the function \code{\link{adjacentreaches.rivernet}}.
 }
 
 \author{
@@ -65,8 +66,15 @@ net <- rivernet.read("rivernet_example_coord.csv",
                      "rivernet_example_reach.csv",
                      "rivernet_example_node.csv",
                      sep=";")
-plot(net,col=ifelse(net$attrib.reach$State<0.5,"red","blue"),lwd=2,
-     col.nodes=ifelse(net$attrib.node$Height<0.1,"black","red"),pch=19,cex.nodes=1.5)
+plot(net,col=ifelse(net$attrib.reach$State<0.5,"red","blue"),lwd=2,pch=19,cex.nodes=1.5,
+     col.nodes=ifelse(is.na(net$attrib.node$Height),
+                      "black",
+                      ifelse(net$attrib.node$Height<0.1,"blue","red")))
+net <- splitreach(net,2,0.4)
+plot(net,col=ifelse(net$attrib.reach$State<0.5,"red","blue"),lwd=2,pch=19,cex.nodes=1.5,
+     col.nodes=ifelse(is.na(net$attrib.node$Height),
+                      "black",
+                      ifelse(net$attrib.node$Height<0.1,"blue","red")))
 }
 
 

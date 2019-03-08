@@ -3,32 +3,26 @@
 \alias{prune}
 
 \title{
-Prune a river network at specified locations
+Prune a river network at specified reaches
 }
 
 \description{
-Prune a river network at specified locations.
+Prune a river network at specified reaches.
 }
 
 \usage{
-prune(net,x.up=NA,y.up=NA,x.dn=NA,y.dn=NA,verbose=TRUE)
+prune(net,reach.up=numeric(0),reach.dn=numeric(0),verbose=TRUE)
 }
 
 \arguments{
   \item{net}{
 Object of class "rivernet" e.g. read by the function \code{\link{rivernet.read}}.
 }
-  \item{x.up}{
-Numerical vector of x coordinates of points from which to remove upstream reaches (needs to be of the same length as argument \code{y.up}).
+  \item{reach.up}{
+Numerical vector of reach indices from which to prune all upstream reaches (the indicated reaches to prune from will be kept in the pruned network). Note that you can get reach indices from coordinates with the function \code{\link{getreachind.rivernet}}.
 }
-  \item{y.up}{
-Numerical vector of y coordinates of points from which to remove upstream reaches (needs to be of the same length as argument \code{x.up}).
-}
-  \item{x.dn}{
-Numerical vector of x coordinates of points from which to remove downstream reaches (needs to be of the same length as argument \code{y.dn}).
-}
-  \item{y.dn}{
-Numerical vector of y coordinates of points from which to remove downstream reaches (needs to be of the same length as argument \code{x.dn}).
+  \item{reach.dn}{
+Numerical vector of reach indices from which to prune all downstream reaches and branches from downstream reaches (the indicated reaches to prune from will be kept in the pruned network). Note that you can get reach indices from coordinates with the function \code{\link{getreachind.rivernet}}.
 }
   \item{verbose}{
 Logical argument to specify whether there should be (minimal) output over what has been done.

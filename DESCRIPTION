@@ -1,8 +1,8 @@
 Package: rivernet
 Type: Package
 Title: Read, Analyze and Plot River Networks
-Version: 1.1
-Date: 2017-05-11
+Version: 1.2
+Date: 2019-03-03
 Author: Peter Reichert
 Maintainer: Peter Reichert <peter.reichert@eawag.ch>
 Description: Functions for reading, analysing and plotting river networks.
@@ -11,9 +11,9 @@ Description: Functions for reading, analysing and plotting river networks.
   The package provides functions to read this data from text files, to analyse the network
   structure and network paths and regions consisting of sections and nodes that fulfill
   prescribed criteria, and to plot the river network and associated properties.
-License: GPL (>= 2)
+License: GPL-3
 LazyData: true
 NeedsCompilation: no
-Packaged: 2017-05-11 20:59:54 UTC; Peter
+Packaged: 2019-03-08 08:16:41 UTC; peter
 Repository: CRAN
-Date/Publication: 2017-05-12 06:00:52 UTC
+Date/Publication: 2019-03-08 08:40:03 UTC

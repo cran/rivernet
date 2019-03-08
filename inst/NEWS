@@ -3,7 +3,44 @@ Change history of rivernet package
 ==================================
 
 
-Changes version 1.0 (16.10.2014) -> version 1.1 (xx.xx.2017)
+Changes version 1.1 (11.05.2017) -> version 1.2 (03.03.2019)
+============================================================
+
+PR: new method splitreach.rivernet added
+
+PR: factors in attrib.reach and in attrib.node converted to strings
+
+PR: function upstreamconnectivity: path.reachable now contain also reaches that 
+    violate the condition but are shorter than thresh.length
+
+PR: function adjacentregions: functionality modified to only contain internal
+    reaches that do not fulfil the criterion (but are below the threshold length)
+
+PR: function upstreamconnectivity: additional output streamorder.reachable
+
+PR: new function getregionconnections, that returns a list of upstream, downstream
+    and connecting paths between regions.
+
+PR: function analyze: modified to overwrite existing columns rather than 
+    append new versions
+
+PR: function analyze: option for choosing the catchment outlet reach(es) 
+    added
+    
+PR: function analyze: option to keep stream orders added; this makes it 
+    possible to keep stream orders in cases of incomplete stream networks
+    (in particular if rivers of low order are missing)
+
+PR: function prune: modified to accept reaches rather than coordinates
+    and to pune upstream or dowstrem of the indicated reaches while
+    keeping the indicated reaches in the pruned network
+    
+PR: function prune: analyze is now called with the option of not modifying
+    the stream order to not derive wrong stream orders if upstream reaches
+    are pruned
+
+
+Changes version 1.0 (16.10.2014) -> version 1.1 (11.05.2017)
 ============================================================
 
 PR: Merging of reach and node attributes in case of multiple files:

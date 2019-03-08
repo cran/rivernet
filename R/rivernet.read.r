@@ -360,7 +360,8 @@ rivernet.read <- function(file.reachcoord,
                              z_end      = z.end,
                              node_start = node.start,
                              node_end   = node.end,
-                             length     = lengths)
+                             length     = lengths,
+                             stringsAsFactors=FALSE)
   rownames(attrib.reach) <- reach.ids
 
   # construct node attributes:
@@ -404,7 +405,8 @@ rivernet.read <- function(file.reachcoord,
   attrib.node <- data.frame(Node    = 1:n.node,
                             Node_ID = 1:n.node,
                             x       = x.node,
-                            y       = y.node)
+                            y       = y.node,
+                            stringsAsFactors=FALSE)
   rownames(attrib.node) <- node.ids
   
   # summarize input statistics:

@@ -13,7 +13,7 @@ Plots a river network.
 \usage{
 \method{plot}{rivernet}(x,margin=0,
                         main=NA,cex.main=1,pos="topleft",
-                        col=NA,
+                        col=NA,lwd=1,
                         pch.nodes=NA,cex.nodes=0.2,col.nodes="black",
                         ...)
 }
@@ -36,6 +36,9 @@ Position of legend. Either "topleft" or "topright".
 }
   \item{col}{
 Optional single color or vector of colors of the different reaches either in the same order as the reaches in the rivernet object or labeled by the reach identifiers.
+}
+  \item{lwd}{
+Optional single line width or vector of line widths of the different reaches either in the same order as the reaches in the rivernet object or labeled by the reach identifiers.
 }
   \item{pch.nodes}{
 Plot marker for nodes. See \code{\link{points}} for an explanation of codes.
