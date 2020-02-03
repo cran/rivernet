@@ -29,9 +29,6 @@ Logical variable to indicate whether streamorder should be calculated
   \item{verbose}{
 Logical variable to turn on and off summary output about the network structure read.
 }
-  \item{...}{
-Optional further arguments.
-}
 }
 
 \value{

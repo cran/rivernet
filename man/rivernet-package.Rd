@@ -13,8 +13,8 @@ Read, Analyse and Plot River Networks
 \tabular{ll}{
 Package: \tab rivernet\cr
 Type: \tab Package\cr
-Version: \tab 1.2\cr
-Date: \tab 2019-03-03\cr
+Version: \tab 1.2.1\cr
+Date: \tab 2020-02-03\cr
 License: \tab GPL-3\cr
 }
 }
@@ -75,6 +75,9 @@ plot(net,col=ifelse(net$attrib.reach$State<0.5,"red","blue"),lwd=2,pch=19,cex.no
      col.nodes=ifelse(is.na(net$attrib.node$Height),
                       "black",
                       ifelse(net$attrib.node$Height<0.1,"blue","red")))
+file.remove("rivernet_example_coord.csv")
+file.remove("rivernet_example_reach.csv")
+file.remove("rivernet_example_node.csv")
 }
 
 

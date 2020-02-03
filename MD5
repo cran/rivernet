@@ -1,4 +1,4 @@
-d39bdfea791c28e558febc2a7ac75a4e *DESCRIPTION
+001cddb9d2160df388eb77f7fa7d39ab *DESCRIPTION
 a4cd71da52cff8b841a2e026459aade2 *NAMESPACE
 f01f4afe351f7aa4c5fc82bdf99e57c8 *R/adjacentreaches.rivernet.r
 2fae8f83307989a8ea63b5a8a7650c87 *R/analyze.rivernet.r
@@ -16,7 +16,7 @@ a3edef5c2adc37813b4cc712349b08cd *R/upstreamconnectivity.rivernet.r
 d918bb0d54b0c21da9e9c8102f5eb439 *man/adjacentreaches.Rd
 fa5e8130c37144e9ba74ea656fd6280c *man/adjacentreaches.rivernet.Rd
 1f19da28f0aaaf01a314d375b8772533 *man/analyze.Rd
-c6d5dbbbca7575050a38613a810dc6b2 *man/analyze.rivernet.Rd
+1d9f77e4358d92bdac58c7a51647ebbc *man/analyze.rivernet.Rd
 462101a5057390190a1c288e30c64168 *man/getnodeind.Rd
 b28dab5d1f5a70bddaf6e09fa963c773 *man/getnodeind.rivernet.Rd
 c9f7a8eff1ffd1a0affe646216587c59 *man/getreachind.Rd
@@ -26,7 +26,7 @@ a84d55f7f3afaca21af328769939177e *man/mean.rivernet.Rd
 0a67727418b430b2c526680e726a3f5e *man/plot.rivernet.Rd
 85d5a06c991f406ff48b302c0883cd98 *man/prune.Rd
 29311fd29d918bd64e56a311d7062688 *man/prune.rivernet.Rd
-d80b1aac41e57cf6b2d8e204312f5fe6 *man/rivernet-package.Rd
+1f3f801215e5f756b6fadfcb2dacf4d0 *man/rivernet-package.Rd
 bbc5bcfbffe01af524b4f7151c63e30e *man/rivernet.read.Rd
 404a62ce4a87b9a008dde443a4715980 *man/rivernet.write.Rd
 74d8df1782124fc7b1b74a61eb2dab19 *man/splitreach.Rd
