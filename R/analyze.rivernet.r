@@ -24,13 +24,14 @@ analyze.rivernet <- function(net,outlet.reach=NA,calc.streamorder=TRUE,verbose=T
       n.subnet <- n.subnet + 1
       reaches <- i
       
-      while ( TRUE )
+print(paste("i =",i))
+      while ( length(reaches) > 0 )
       {
         subnet[reaches] <- n.subnet
         nodes <- unique(c(net$attrib.reach$node_start[reaches],net$attrib.reach$node_end[reaches]))
         reaches <- which( !is.na(match(net$attrib.reach$node_start,nodes)) |
                           !is.na(match(net$attrib.reach$node_end,nodes)) )
-        if ( sum(is.na(subnet[reaches])) == 0 ) break
+        reaches <- reaches[is.na(subnet[reaches])]  # only consider new reaches
       }
     }
   }

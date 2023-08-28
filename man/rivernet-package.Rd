@@ -13,8 +13,8 @@ Read, Analyse and Plot River Networks
 \tabular{ll}{
 Package: \tab rivernet\cr
 Type: \tab Package\cr
-Version: \tab 1.2.1\cr
-Date: \tab 2020-02-03\cr
+Version: \tab 1.2.3\cr
+Date: \tab 2023-08-28\cr
 License: \tab GPL-3\cr
 }
 }
@@ -43,7 +43,7 @@ Important functions:\cr\cr
 \author{
 Peter Reichert
 
-Maintainer: Peter Reichert <peter.reichert@eawag.ch>
+Maintainer: Peter Reichert <peter.reichert@emeriti.eawag.ch>
 }
 
 \keyword{ package }

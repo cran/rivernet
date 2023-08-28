@@ -3,6 +3,24 @@ Change history of rivernet package
 ==================================
 
 
+Changes version 1.2.2 (01.01.2021) -> version 1.2.3 (28.08.2023)
+================================================================
+
+PR: update of maintainer email address
+
+
+Changes version 1.2.1 (03.02.2020) -> version 1.2.2 (01.01.2021)
+================================================================
+
+PR: performance improvement of analyze.rivernet
+
+
+Changes version 1.2 (03.03.2019) -> version 1.2.1 (03.02.2020)
+==============================================================
+
+PR: minor corrections to man pages
+
+
 Changes version 1.1 (11.05.2017) -> version 1.2 (03.03.2019)
 ============================================================
 
